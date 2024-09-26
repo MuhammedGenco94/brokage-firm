@@ -23,8 +23,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Side side;
 
-    //ToDo: Specify the precision and scale for the size and price fields
+    @Column(precision = 19, scale = 4)
     private BigDecimal size;
+
+    @Column(precision = 19, scale = 4)
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
