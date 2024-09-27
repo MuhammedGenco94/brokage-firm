@@ -16,6 +16,9 @@ public class Customer {
 
     private String name;
 
+    /**
+     * Password is the secret code that a customer uses to access their account.
+     */
     private String password;
 
     /**
