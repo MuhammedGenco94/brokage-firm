@@ -3,6 +3,8 @@ package com.ing.brokagefirm.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "customers")
 @Data
