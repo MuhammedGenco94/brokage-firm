@@ -14,6 +14,10 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * The unique identifier used by the customer to log in to their account.
+     */
+    @Column(unique = true)
     private String name;
 
     /**
@@ -26,5 +30,11 @@ public class Customer {
      */
     @Column(precision = 19, scale = 4)
     private BigDecimal balance;
+
+    /**
+     * Role represents the customer's role in the system, which can be either USER or ADMIN.
+     */
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 }
