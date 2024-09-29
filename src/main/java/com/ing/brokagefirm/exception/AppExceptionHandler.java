@@ -16,8 +16,14 @@ import java.sql.SQLException;
 public class AppExceptionHandler {
 
     @ExceptionHandler({HibernateException.class, SQLException.class, PSQLException.class})
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleSQLExceptions(HttpServletRequest req, Exception ex) {
+        log.error("Error: {} \nFor Request URL: {}", ex.getMessage(), req.getRequestURL().toString());
+    }
+
+    @ExceptionHandler({RuntimeException.class})
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public void handleRuntimeExceptions(HttpServletRequest req, Exception ex) {
         log.error("Error: {} \nFor Request URL: {}", ex.getMessage(), req.getRequestURL().toString());
     }
 
