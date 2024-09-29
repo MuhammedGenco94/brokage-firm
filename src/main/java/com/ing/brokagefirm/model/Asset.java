@@ -25,7 +25,7 @@ public class Asset {
     private Customer customer;
 
     /**
-     * Asset is the name of the stock, customer wants to buy.
+     * Asset is the name of the stock, customer wants to buy/sell.
      */
     private String assetName;
 
