@@ -36,13 +36,14 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/orders/**", "/api/assets/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
-        return http.build();
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 
     @Bean
