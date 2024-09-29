@@ -24,7 +24,7 @@ public class AssetService {
     }
 
     public void save(Asset asset) {
-        assetRepository.saveAndFlush(asset);
+        assetRepository.save(asset);
     }
 
 }
