@@ -29,16 +29,14 @@ public class CustomerService {
     }
 
     /**
-     * Returns the total number of customers in the database.
-     *
-     * @return the total number of customers.
+     * @return the total number of customers in the database.
      */
-    public long countAll() {
+    public long countAllCustomers() {
         return customerRepository.count();
     }
 
-    public boolean noPreviousCustomers() {
-        return countAll() == 0;
+    public boolean noDatabaseCustomers() {
+        return countAllCustomers() == 0;
     }
 
     public Optional<Customer> findByName(String name) {

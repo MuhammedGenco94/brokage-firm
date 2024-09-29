@@ -48,7 +48,7 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService() {
         return customerName -> {
-            if (ADMIN.equalsIgnoreCase(customerName) || customerService.noPreviousCustomers()) {
+            if (ADMIN.equalsIgnoreCase(customerName) || customerService.noDatabaseCustomers()) {
                 return new User(
                         ADMIN,
                         new BCryptPasswordEncoder().encode(appConfiguration.getAdminPassword()),
