@@ -42,4 +42,10 @@ public class CustomerService {
     public Optional<Customer> findByName(String name) {
         return customerRepository.findByName(name);
     }
+
+    public Customer findById(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found with id: " + id));
+    }
+
 }

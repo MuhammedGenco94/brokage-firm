@@ -21,7 +21,7 @@ public class AppExceptionHandler {
         log.error("Error: {} \nFor Request URL: {}", ex.getMessage(), req.getRequestURL().toString());
     }
 
-    @ExceptionHandler({RuntimeException.class})
+    @ExceptionHandler({RuntimeException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public void handleRuntimeExceptions(HttpServletRequest req, Exception ex) {
         log.error("Error: {} \nFor Request URL: {}", ex.getMessage(), req.getRequestURL().toString());

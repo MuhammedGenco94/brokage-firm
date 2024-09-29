@@ -18,4 +18,13 @@ public class AssetService {
         return assetRepository.findByCustomerId(customerId);
     }
 
+    public Asset findByCustomerIdAndAssetName(Long customerId, String assetName) {
+        return assetRepository.findByCustomerIdAndAssetName(customerId, assetName)
+                .orElse(null);
+    }
+
+    public void save(Asset asset) {
+        assetRepository.saveAndFlush(asset);
+    }
+
 }
