@@ -1,5 +1,6 @@
 package com.ing.brokagefirm.service;
 
+import com.ing.brokagefirm.model.Asset;
 import com.ing.brokagefirm.model.Customer;
 import com.ing.brokagefirm.model.Role;
 import com.ing.brokagefirm.model.dto.CustomerDTO;
@@ -13,9 +14,11 @@ import java.util.Optional;
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final AssetService assetService;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, AssetService assetService) {
         this.customerRepository = customerRepository;
+        this.assetService = assetService;
     }
 
     public void registerCustomer(CustomerDTO customerDTO) {
@@ -23,9 +26,16 @@ public class CustomerService {
         customer.setName(customerDTO.getName());
         customer.setPassword(new BCryptPasswordEncoder().encode(customerDTO.getPassword()));
         customer.setRole(Role.USER);
-        customer.setBalance(BigDecimal.ZERO);
 
-        customerRepository.saveAndFlush(customer);
+        Customer savedCustomer = customerRepository.save(customer);
+
+        Asset tryAsset = new Asset();
+        tryAsset.setCustomer(savedCustomer);
+        tryAsset.setAssetName("TRY");
+        tryAsset.setSize(BigDecimal.ZERO);
+        tryAsset.setUsableSize(BigDecimal.ZERO);
+
+        assetService.save(tryAsset);
     }
 
     /**

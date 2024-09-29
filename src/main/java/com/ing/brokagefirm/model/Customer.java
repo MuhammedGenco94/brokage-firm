@@ -26,12 +26,6 @@ public class Customer {
     private String password;
 
     /**
-     * Balance represents the total amount of cash (TRY) that a customer has in their account.
-     */
-    @Column(precision = 19, scale = 4)
-    private BigDecimal balance;
-
-    /**
      * Role represents the customer's role in the system, which can be either USER or ADMIN.
      */
     @Enumerated(EnumType.STRING)
