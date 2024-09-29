@@ -27,7 +27,7 @@ public class OrderService {
     public Order createOrder(OrderDTO orderDTO) {
         if (orderDTO.getSize().compareTo(BigDecimal.ZERO) <= 0 || orderDTO.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             log.error("Size and price must be greater than zero!");
-            throw new RuntimeException("Size and price must be greater than zero!");
+            throw new IllegalArgumentException("Size and price must be greater than zero!");
         }
 
         Customer customer = customerService.findById(orderDTO.getCustomerId());
@@ -52,7 +52,7 @@ public class OrderService {
             Asset asset = assetService.findByCustomerIdAndAssetName(orderDTO.getCustomerId(), orderDTO.getAssetName());
 
             if (asset == null || asset.getUsableSize().compareTo(orderDTO.getSize()) < 0) {
-                throw new IllegalArgumentException("Insufficient shares for this asset to sell");
+                throw new IllegalArgumentException("Insufficient shares for '%s' asset to sell".formatted(orderDTO.getAssetName()));
             }
 
             asset.setUsableSize(asset.getUsableSize().subtract(orderDTO.getSize()));
