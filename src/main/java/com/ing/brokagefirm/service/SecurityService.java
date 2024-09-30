@@ -3,6 +3,7 @@ package com.ing.brokagefirm.service;
 import com.ing.brokagefirm.model.Customer;
 import com.ing.brokagefirm.model.Order;
 import com.ing.brokagefirm.model.Role;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class SecurityService {
 
         if (currentCustomer.getRole().equals(Role.USER)) {
             if (!customerId.equals(currentCustomer.getId())) {
-                throw new IllegalArgumentException("You are not authorized to create order for this customer");
+                throw new AuthorizationServiceException("You can only access and manipulate your own data");
             }
         }
     }
@@ -51,7 +52,7 @@ public class SecurityService {
 
         if (currentCustomer.getRole().equals(Role.USER)) {
             if (!order.getCustomer().getId().equals(currentCustomer.getId())) {
-                throw new IllegalArgumentException("You are not authorized to create order for this customer");
+                throw new IllegalArgumentException("You can only access and manipulate your own data.");
             }
         }
     }

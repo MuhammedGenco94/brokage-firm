@@ -6,6 +6,7 @@ import org.hibernate.HibernateException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -15,18 +16,28 @@ import java.sql.SQLException;
 @Slf4j
 public class AppExceptionHandler {
 
+    private final String errorMessage = "Error: {} \nFor Request URL: {}";
+
+
     @ExceptionHandler({HibernateException.class, SQLException.class, PSQLException.class})
     public ResponseEntity<AppExceptionEntity> handleSQLExceptions(HttpServletRequest req, Exception ex) {
-        log.error("Error: {} \nFor Request URL: {}", ex.getMessage(), req.getRequestURL().toString());
+        log.error(errorMessage, ex.getMessage(), req.getRequestURL().toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AppExceptionEntity(ex.getMessage(), req.getRequestURL().toString()));
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<AppExceptionEntity> handleRuntimeExceptions(HttpServletRequest req, Exception ex) {
-        log.error("Error: {} \nFor Request URL: {}", ex.getMessage(), req.getRequestURL().toString());
+    public ResponseEntity<AppExceptionEntity> handleIllegalArgumentException(HttpServletRequest req, Exception ex) {
+        log.error(errorMessage, ex.getMessage(), req.getRequestURL().toString());
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AppExceptionEntity(ex.getMessage(), req.getRequestURL().toString()));
+    }
+
+    @ExceptionHandler({AuthorizationServiceException.class})
+    public ResponseEntity<AppExceptionEntity> handleAuthorizationException(HttpServletRequest req, Exception ex) {
+        log.error(errorMessage, ex.getMessage(), req.getRequestURL().toString());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AppExceptionEntity(ex.getMessage(), req.getRequestURL().toString()));
     }
 
 }
