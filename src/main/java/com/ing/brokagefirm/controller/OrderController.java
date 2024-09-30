@@ -35,17 +35,30 @@ public class OrderController {
         return ResponseEntity.ok("Order created successfully");
     }
 
-//    @GetMapping("/list")
-//    public List<Order> listOrders(@RequestParam Long customerId, @RequestParam String startDate, @RequestParam String endDate) {
-//        return orderService.listOrders(customerId, startDate, endDate);
-//    }
-//
-//    @DeleteMapping("/cancel/{orderId}")
-//    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
-//        orderService.cancelOrder(orderId);
-//
-//        log.info("Order No:'{}' canceled successfully", orderId);
-//        return ResponseEntity.ok("Order No:'" + orderId + "' canceled successfully");
-//    }
+    @GetMapping("/list")
+    public List<Order> listOrders(@RequestParam Long customerId) {
+        securityService.validateAuthorizationByCustomer(customerId);
+
+        return orderService.listOrders(customerId);
+    }
+
+    @GetMapping("/list/date")
+    public List<Order> listOrders(@RequestParam Long customerId,
+                                  @RequestParam String startDate,
+                                  @RequestParam String endDate) {
+        securityService.validateAuthorizationByCustomer(customerId);
+
+        return orderService.listOrders(customerId, startDate, endDate);
+    }
+
+    @DeleteMapping("/cancel/{orderId}")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        securityService.validateAuthorizationByOrder(orderId);
+
+        orderService.cancelOrder(orderId);
+
+        log.info("Order No:'{}' canceled successfully", orderId);
+        return ResponseEntity.ok("Order No:'" + orderId + "' canceled successfully");
+    }
 
 }
