@@ -24,7 +24,7 @@ public class CustomerService {
     public void registerCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setName(customerDTO.getName());
-        customer.setPassword(new BCryptPasswordEncoder().encode(customerDTO.getPassword()));
+        customer.setEncodedPassword(new BCryptPasswordEncoder().encode(customerDTO.getPassword()));
         customer.setRole(Role.USER);
 
         Customer savedCustomer = customerRepository.save(customer);

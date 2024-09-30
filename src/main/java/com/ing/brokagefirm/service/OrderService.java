@@ -23,7 +23,12 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-
+    /**
+     * Create an order.
+     *
+     * @param orderDTO order dto
+     * @return created order
+     */
     public Order createOrder(OrderDTO orderDTO) {
         if (orderDTO.getSize().compareTo(BigDecimal.ZERO) <= 0 || orderDTO.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             log.error("Size and price must be greater than zero!");

@@ -63,7 +63,7 @@ public class SecurityConfiguration {
 
             return new User(
                     customer.getName(),
-                    customer.getPassword(),
+                    customer.getEncodedPassword(),
                     List.of(new SimpleGrantedAuthority("ROLE_" + customer.getRole()))
             );
         };
