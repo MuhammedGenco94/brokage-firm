@@ -46,3 +46,6 @@ Git (optional, for cloning the repository)
 ## Accessing the API
 
 http://localhost:8080
+
+## Default Admin user credentials:
+- admin/admin123
