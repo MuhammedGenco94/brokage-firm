@@ -13,6 +13,17 @@ import java.math.BigDecimal;
 @Table(name = "assets")
 @Data
 public class Asset {
+
+    public Asset(Customer customer, String assetName, BigDecimal size, BigDecimal usableSize) {
+        this.customer = customer;
+        this.assetName = assetName;
+        this.size = size;
+        this.usableSize = usableSize;
+    }
+
+    public Asset() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

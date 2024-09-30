@@ -4,6 +4,7 @@ import com.ing.brokagefirm.model.*;
 import com.ing.brokagefirm.model.dto.OrderDTO;
 import com.ing.brokagefirm.repository.OrderRepository;
 import jakarta.annotation.Nonnull;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -149,4 +150,58 @@ public class OrderService {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
     }
+
+    @Transactional
+    public void matchOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (!Status.PENDING.equals(order.getStatus())) {
+            throw new IllegalArgumentException("Only pending orders can be matched");
+        }
+
+        Customer customer = order.getCustomer();
+        Asset tryAsset = assetService.findByCustomerIdAndAssetName(customer.getId(), "TRY");
+
+        // BUY side
+        if (Side.BUY.equals(order.getSide())) {
+            BigDecimal totalCost = order.getSize().multiply(order.getPrice());
+            if (tryAsset.getUsableSize().compareTo(totalCost) < 0) {
+                throw new IllegalArgumentException("Insufficient TRY balance for matching");
+            }
+
+            tryAsset.setSize(tryAsset.getSize().subtract(totalCost));
+            assetService.save(tryAsset);
+
+            Asset boughtAsset = assetService.findByCustomerIdAndAssetName(customer.getId(), order.getAssetName());
+            if (boughtAsset == null) {
+                boughtAsset = new Asset(customer, order.getAssetName(), BigDecimal.ZERO, BigDecimal.ZERO);
+            }
+
+            boughtAsset.setSize(boughtAsset.getSize().add(order.getSize()));
+            boughtAsset.setUsableSize(boughtAsset.getUsableSize().add(order.getSize()));
+            assetService.save(boughtAsset);
+
+        }
+        // SELL side
+        else if (Side.SELL.equals(order.getSide())) {
+            Asset sellingAsset = assetService.findByCustomerIdAndAssetName(customer.getId(), order.getAssetName());
+
+            if (sellingAsset.getUsableSize().compareTo(order.getSize()) < 0) {
+                throw new IllegalArgumentException("Insufficient stock size to sell");
+            }
+
+            sellingAsset.setSize(sellingAsset.getSize().subtract(order.getSize()));
+            assetService.save(sellingAsset);
+
+            BigDecimal totalIncome = order.getSize().multiply(order.getPrice());
+            tryAsset.setUsableSize(tryAsset.getUsableSize().add(totalIncome));
+            tryAsset.setSize(tryAsset.getSize().add(totalIncome));
+            assetService.save(tryAsset);
+        }
+
+        order.setStatus(Status.MATCHED);
+        orderRepository.save(order);
+    }
+
 }
