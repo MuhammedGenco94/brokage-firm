@@ -3,6 +3,7 @@ package com.ing.brokagefirm.controller;
 import com.ing.brokagefirm.model.Order;
 import com.ing.brokagefirm.model.dto.OrderDTO;
 import com.ing.brokagefirm.service.OrderService;
+import com.ing.brokagefirm.service.SecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,19 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final SecurityService securityService;
 
-    public OrderController(OrderService orderService) {
+
+    public OrderController(OrderService orderService, SecurityService securityService) {
         this.orderService = orderService;
+        this.securityService = securityService;
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<String> createOrder(@RequestBody OrderDTO orderDTO) {
+        securityService.validateAuthorizationByCustomer(orderDTO.getCustomerId());
+
         Order order = orderService.createOrder(orderDTO);
 
         log.info("Order No:'{}' created successfully", order.getId());
