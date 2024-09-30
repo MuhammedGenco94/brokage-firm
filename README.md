@@ -26,26 +26,35 @@ Git (optional, for cloning the repository)
 
 1. Clone the Repository
 
-- git clone https://github.com/MuhammedGenco94/brokage-firm.git
-- cd <repository-directory>
+   git clone https://github.com/MuhammedGenco94/brokage-firm.git
+
+   cd <repository-directory>
 
 2. Build the Project Using Maven
 
-- mvn clean install
+   mvn clean install
 
 ## Running the Application
 
 1. Run Using Maven:
 
-- mvn spring-boot:run
+   mvn spring-boot:run
 
 2. Run the Built JAR:
 
-- java -jar target/brokage-firm-0.0.1-SNAPSHOT.jar
+   java -jar target/brokage-firm-0.0.1-SNAPSHOT.jar
 
 ## Accessing the API
 
-http://localhost:8080
+    http://localhost:8080
 
 ## Default Admin user credentials:
-- admin/admin123
+
+    - username: admin
+    - password: admin123
+
+## API Documentation
+
+### Swagger UI
+
+http://localhost:8080/swagger-ui/index.html
